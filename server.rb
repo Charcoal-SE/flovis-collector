@@ -60,7 +60,7 @@ Server = Rack::Builder.new do
 end.to_app
 
 def log(key, message)
-  puts "#{key.rjust(15)}: #{message}"
+  puts "#{key.to_s.rjust(15)}: #{message}"
 end
 
 def on_message(ws, event)
