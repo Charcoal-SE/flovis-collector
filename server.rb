@@ -21,7 +21,7 @@ Faye::WebSocket.load_adapter('thin')
 config = YAML.load_file('config/database.yml')
 ActiveRecord::Base.establish_connection(config['development'])
 
-CLIENTS = {}.freeze
+CLIENTS = {} # rubocop:disable Style/MutableConstant
 
 Server = Rack::Builder.new do
   app = ->(env) do

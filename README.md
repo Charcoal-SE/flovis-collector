@@ -15,6 +15,7 @@ Run these commands:
 Edit `config/database.yml` to provide details for the database you'll be using. Then:
 
     rake db:create
+    rake db:schema:load
     rake db:migrate
 
 Ready to go!
