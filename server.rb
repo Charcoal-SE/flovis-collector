@@ -28,6 +28,8 @@ Server = Rack::Builder.new do
     if Faye::WebSocket.websocket?(env)
       ws = Faye::WebSocket.new(env)
       CLIENTS[ws] ||= DateTime.now
+      log ws.object_id, "open from #{env['HTTP_X_REAL_IP']}"
+      log 'open', "maintaining #{CLIENTS.size} connections"
 
       pings = EM.add_periodic_timer(10) do
         if CLIENTS[ws] < 60.seconds.ago
@@ -41,8 +43,11 @@ Server = Rack::Builder.new do
         on_message(ws, event)
       end
 
-      ws.on :close do |_e|
+      ws.on :close do |e|
+        CLIENTS.delete ws
         EM.cancel_timer(pings)
+        log ws.object_id, "closed with #{e.code}"
+        log 'close', "maintaining #{CLIENTS.size} connections"
       end
 
       ws.rack_response
@@ -53,6 +58,10 @@ Server = Rack::Builder.new do
 
   run app
 end.to_app
+
+def log(key, message)
+  puts "#{key.rjust(15)}: #{message}"
+end
 
 def on_message(ws, event)
   begin
