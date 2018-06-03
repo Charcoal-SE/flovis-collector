@@ -20,7 +20,7 @@ Faye::WebSocket.load_adapter('thin')
 
 config = YAML.load_file('config/database.yml')
 ActiveRecord::Base.establish_connection(config['development'])
-ActiveRecord::Base.execute('SET NAMES utf8mb4')
+ActiveRecord::Base.connection.execute('SET NAMES utf8mb4')
 
 CLIENTS = {} # rubocop:disable Style/MutableConstant
 
